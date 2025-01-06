@@ -1,0 +1,41 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+"int"|"float"|"char"|"double"|"void" { printf("Keyword: %s\n", yytext); }
+"if"|"else"|"for"|"while"|"return" { printf("Keyword: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Identifier: %s\n", yytext); }
+[0-9]+ { printf("Number: %s\n", yytext); }
+"=="|"!="|"<="|">="|"<"|">" { printf("Operator: %s\n", yytext); }
+"+"|"-"|"*"|"/"|"=" { printf("Operator: %s\n", yytext); }
+"(" { printf("Left Parenthesis: %s\n", yytext); }
+")" { printf("Right Parenthesis: %s\n", yytext); }
+"{" { printf("Left Brace: %s\n", yytext); }
+"}" { printf("Right Brace: %s\n", yytext); }
+";" { printf("Semicolon: %s\n", yytext); }
+"," { printf("Comma: %s\n", yytext); }
+\".*\" { printf("String Literal: %s\n", yytext); }
+"//". { /* Ignore single-line comments */ }
+"/\\*([^*]|\\*+[^*/])*\\*+/" { /* Ignore multi-line comments */ }
+[ \t\n]+ { /* Ignore whitespace */ }
+. { printf("Unknown: %s\n", yytext); }
+%%
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        printf("Usage: %s <source-file>\n", argv[0]);
+        return 1;
+    }
+    FILE *file = fopen(argv[1], "r");
+    if (!file) {
+        perror("Unable to open file");
+        return 1;
+    }
+    yyin = file;
+    yylex(); // Begin lexical analysis
+    fclose(file);
+    return 0;
+}
+
+int yywrap() { return 1; }

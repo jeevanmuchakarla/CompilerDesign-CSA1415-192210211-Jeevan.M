@@ -1,0 +1,37 @@
+%{
+#include <stdio.h>
+int comment_count = 0; // For counting comment lines
+FILE *output_file; // Output file pointer
+%}
+
+%%
+"//".* { comment_count++; } // Matches single-line comments
+"/\\*([^*]|\\*+[^*/])*\\*+/" { comment_count++; } // Matches multi-line comments
+\n { fprintf(output_file, "\n"); } // Copy new lines to output file
+[^/\n]+ { fprintf(output_file, "%s", yytext); } // Copy other characters to output file
+%%
+
+int main(int argc, char **argv) {
+    if (argc < 3) {
+        printf("Usage: %s <input-file> <output-file>\n", argv[0]);
+        return 1;
+    }
+    FILE *input_file = fopen(argv[1], "r");
+    if (!input_file) {
+        perror("Unable to open input file");
+        return 1;
+    }
+    output_file = fopen(argv[2], "w");
+    if (!output_file) {
+        perror("Unable to open output file");
+        fclose(input_file);
+        return 1;
+    }
+    yyin = input_file;
+    yylex(); // Begin lexical analysis
+    fclose(input_file);
+    fclose(output_file);
+    printf("Number of comment lines: %d\n", comment_count);
+    return 0;
+}
+int yywrap(){return 1;}

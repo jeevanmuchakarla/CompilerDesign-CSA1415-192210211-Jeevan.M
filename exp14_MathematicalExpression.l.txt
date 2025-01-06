@@ -1,0 +1,48 @@
+%{
+#include<stdio.h>
+#include<stdlib.h>
+
+float num1,num2,result;
+char operator;
+
+%}
+
+
+%%
+[0-9]+(\.[0-9]+)?  {
+		if(operator==0){num1=atof(yytext);}
+		else{num2=atof(yytext);}
+}
+"+" {operator = '+';}
+"-" {operator = '-';}
+"*" {operator = '*';}
+"/" {operator = '/';}
+
+\n  {
+	switch(operator){
+		case '+': result = num1+num2;break;
+		case '-': result = num1-num2;break;
+		case '*': result = num1*num2;break;
+		case '/': if(num2!=0){result=num1/num2;}
+			else{printf("Error division by zero\n");return 0;}
+			break;
+		default: printf("Error: Invalid operator\n"); return 0;
+	}
+	printf("Result: %.2f\n",result);
+	operator = 0;
+}
+[ \t] {}
+.  {printf("Invalid character: %s\n",yytext);}
+
+%%
+
+int main(){
+	printf("Enter a simple mathematical expression: ");
+	yylex();
+	return 0;
+}
+
+int yywrap(){
+	return 1;	
+}
+	

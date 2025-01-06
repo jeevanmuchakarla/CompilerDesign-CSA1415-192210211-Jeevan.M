@@ -1,0 +1,37 @@
+%{
+
+#include<stdio.h>
+#include<string.h>
+
+char old_str[100];
+char new_str[100];
+
+%}
+
+%%
+
+[a-zA-Z]+    { if(strcmp(yytext, old_str) == 0){printf("%s",new_str); }
+		 else {printf("%s", yytext);}}
+.|\n  {ECHO;}
+
+%%
+
+int main(int argc,char *argv[]){
+	if(argc>1){
+		printf("Enter the string for replace : ");
+		scanf("%s",old_str);
+		printf("Enter the New String : ");
+		scanf("%s",new_str);
+		
+
+		FILE *file = fopen(argv[1],"r");
+		if(file){
+			yyin =file;
+			yylex();
+			fclose(file);
+		}else{printf("File not found\n");}
+	}else{printf("Please provide file name\n");}
+	return 0;
+}
+
+int yywrap(){return 1;}

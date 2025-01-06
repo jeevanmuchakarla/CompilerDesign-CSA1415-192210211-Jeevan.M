@@ -1,0 +1,23 @@
+%{
+
+#include<stdio.h>
+#include<string.h>
+
+%}
+
+%%
+
+[[:alpha:]]+  {printf("It is a word :%s\n",yytext);}
+[==|>=|<=|>|<|!=]  {printf("It is a relational operator : %s\n",yytext);}
+. {}
+%%
+
+
+int main(){
+	printf("Enter the input : ");
+	yylex();
+	return 0;
+}
+int yywrap(){
+	return 1;
+}

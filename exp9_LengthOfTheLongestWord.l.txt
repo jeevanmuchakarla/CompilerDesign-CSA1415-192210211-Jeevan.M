@@ -1,0 +1,32 @@
+%{
+
+#include<stdio.h>
+#include<string.h>
+int max_length =0;
+int current_length=0;
+
+%}
+
+%%
+[a-zA-z0-9]+ {current_length = yyleng;
+		if(current_length>max_length){max_length=current_length;}
+}
+.|\n {}
+%%
+
+int main(int argc,char **argv){
+	if(argc>1){
+		FILE *file=fopen(argv[1],"r");
+		if(!file){
+			perror("Error Opening file");
+			return 1;
+		}
+		yyin = file;
+	}
+	yylex();
+	printf("Length of the word is : %d\n",max_length);
+	return 0;
+}
+int yywrap(){
+	return 1;
+}

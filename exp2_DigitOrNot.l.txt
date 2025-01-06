@@ -1,0 +1,25 @@
+%{
+#include<stdio.h>
+#include<string.h>
+%}
+
+%%
+[0-9]+ { /* Do nothing */ }
+[^0-9]+ { printf("The Given input is not a digit\n"); return 0; }
+%%
+
+int main(){
+    char input[100];
+    printf("Enter the Input: ");
+    scanf("%s", input);
+    if (strspn(input, "0123456789") == strlen(input)) {
+        printf("The Given input is a digit\n");
+    } else {
+        printf("The Given input is not a digit\n");
+    }
+    return 0;
+}
+
+int yywrap(){
+    return 1;
+}

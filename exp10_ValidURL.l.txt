@@ -1,0 +1,28 @@
+%{
+#include <stdio.h>
+#include <string.h>
+%}
+
+%%
+
+"https"://[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(/[a-zA-Z0-9\-\._~:/?#[\\]@!$&'()*+,;=]*)? { 
+    printf("Valid URL: %s\n", yytext);
+"http"://[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,6}(/[a-zA-Z0-9\-\._~:/?#[\\]@!$&'()*+,;=]*)? { 
+    printf("Valid URL: %s\n", yytext);
+
+# Match invalid inputs (anything else)
+[^\n]+ {
+    printf("Invalid URL: %s\n", yytext);
+}
+
+%%
+
+int main() {
+    printf("Enter a URL to validate (Ctrl+D to exit):\n");
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

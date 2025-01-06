@@ -1,0 +1,29 @@
+%{
+#include <stdio.h>
+#include <string.h>
+char target_word[100]; // The word to count
+int word_count = 0; // For counting the occurrences of the target word
+%}
+
+%%
+[a-zA-Z]+ {
+    if (strcmp(yytext, target_word) == 0) {
+        word_count++;
+    }
+}
+.|\n { /* Ignore other characters */ }
+%%
+
+int main(int argc, char **argv) {
+    if (argc < 3) {
+        printf("Usage: %s <target-word> <sentence>\n", argv[0]);
+        return 1;
+    }
+    strcpy(target_word, argv[1]);
+    yy_scan_string(argv[2]);
+    yylex(); // Begin lexical analysis
+    printf("The word '%s' appears %d times.\n", target_word, word_count);
+    return 0;
+}
+
+int yywrap() { return 1; }

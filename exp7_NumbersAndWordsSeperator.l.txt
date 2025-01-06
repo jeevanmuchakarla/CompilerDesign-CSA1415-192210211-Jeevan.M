@@ -1,0 +1,54 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void add_to_list(char *word, char *list[], int *count);
+
+#define MAX_WORDS 100
+
+char *numbers[MAX_WORDS];
+char *words[MAX_WORDS];
+int num_count = 0;
+int word_count = 0;
+
+%}
+
+%%
+
+[0-9]+ {
+    add_to_list(yytext, numbers, &num_count);
+}
+
+[a-zA-Z]+ {
+    add_to_list(yytext, words, &word_count);
+}
+
+[ \t\n]+ { /* Ignore whitespace */ }
+. { /* Ignore other characters */ }
+
+%%
+
+void add_to_list(char *word, char *list[], int *count) {
+    list[*count] = (char *)malloc(strlen(word) + 1);
+    strcpy(list[*count], word);
+    (*count)++;
+}
+
+int main() {
+    printf("Enter a statement: ");
+    yylex();
+    printf("Numbers:\n");
+    for (int i = 0; i < num_count; i++) {
+        printf("%s\n", numbers[i]);
+    }
+    printf("Words:\n");
+    for (int i = 0; i < word_count; i++) {
+        printf("%s\n", words[i]);
+    }
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

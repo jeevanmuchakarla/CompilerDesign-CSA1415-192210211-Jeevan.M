@@ -1,0 +1,27 @@
+%{
+
+#include<stdio.h>
+int vowel_count=0;
+int c_count=0;
+
+%}
+
+%%
+
+[AaEeIiOoUu] {vowel_count++;}
+[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ] {c_count++;}
+.|\n 
+
+%%
+
+int main(){
+	printf("Enter the Sentences : ");
+	yylex();
+	printf("Number of Vowels : %d\n",vowel_count);
+	printf("Number of Consonant : %d\n",c_count);
+	return 0;
+}
+
+int yywrap(){
+	return 1;
+}

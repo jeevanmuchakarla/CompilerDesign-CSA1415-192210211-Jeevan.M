@@ -1,0 +1,22 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+
+^[aeiouAEIOU][a-zA-Z]* { printf("Accepted: %s\n", yytext); }
+[a-zA-Z]+ { printf("Rejected: %s\n", yytext); }
+[ \t\n]+ { /* Ignore whitespace */ }
+. { /* Ignore other characters */ }
+
+%%
+
+int main() {
+    printf("Enter a string: ");
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

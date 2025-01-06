@@ -1,0 +1,17 @@
+%{
+#include<stdio.h>
+%}
+
+%%
+^[0-9]{10}$ {printf("The given Employeee mobile number is Valid");}
+.* {printf("The given Employeee mobile number is inValid");}
+%%
+
+int main(){
+	printf("Enter the Mobile number : ");
+	yylex();
+	return 0;
+}
+int yywrap(){
+	return 1;
+}

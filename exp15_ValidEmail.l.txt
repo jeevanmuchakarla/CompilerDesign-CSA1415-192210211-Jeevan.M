@@ -1,0 +1,23 @@
+%{
+
+#include<stdio.h>
+#include<stdlib.h>
+
+
+%}
+
+%%
+
+[a-zA-Z0-9._]+@(gmail\.com|yahoo\.com|protonmail\.com|outlook\.com) {printf("The give mail id is valid :%s\n",yytext);}
+.|\n {printf("It is invalid mail id : %s\n",yytext);}
+
+%%
+
+int main(){
+	printf("Enter the Email address: ");
+	yylex();
+	return 0;
+}
+int yywrap(){
+	return 1;
+}

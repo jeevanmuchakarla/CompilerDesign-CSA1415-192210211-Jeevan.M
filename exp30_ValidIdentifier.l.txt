@@ -1,0 +1,28 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Valid identifier: %s\n", yytext); } // Matches valid identifiers
+[^a-zA-Z0-9_\n]+ { printf("Invalid identifier: %s\n", yytext); } // Matches invalid identifiers
+[ \t\n]+ { /* Ignore spaces, tabs, and new lines */ }
+. {  } // Matches any other character
+%%
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        printf("Usage: %s <source-file>\n", argv[0]);
+        return 1;
+    }
+    FILE *file = fopen(argv[1], "r");
+    if (!file) {
+        perror("Unable to open file");
+        return 1;
+    }
+    yyin = file;
+    yylex(); // Begin lexical analysis
+    fclose(file);
+    return 0;
+}
+
+int yywrap() { return 1; }
